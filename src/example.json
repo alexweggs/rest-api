@@ -1,0 +1,45 @@
+{
+  "materials": [
+    {
+      "id": "7887",
+      "name": "PP transparent"
+    }
+  ],
+  "finishes": [
+    {
+      "id": "34",
+      "name": "Pelliculage brillant"
+    }
+  ],
+  "configurations": [
+    {
+      "id": "3289",
+      "material": "7887",
+      "finish": "34"
+    }
+  ],
+  "cuttings": [
+    {
+      "id": "FORME",
+      "label": "Cut to shape"
+    },
+    {
+      "id": "DROITE",
+      "label": "Straight cut"
+    }
+  ],
+  "orientations": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "cores": [
+    {
+      "size": 40
+    },
+    {
+      "size": 60
+    }
+  ]
+}

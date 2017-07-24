@@ -1,0 +1,204 @@
+{
+    "scenarios": [
+        {
+            "id": "914",
+            "finish": "e18",
+            "material": 7775,
+            "name": "14. CouchÃ© enlevable/CMJN/Vernis brillant smart",
+            "leadTime": 4
+        },
+        {
+            "id": "892",
+            "finish": "e18",
+            "material": 7887,
+            "name": "1.CouchÃ© permanent/CMJN/vernis brillant Smart",
+            "leadTime": 4
+        },
+        {
+            "id": "894",
+            "finish": "p7815",
+            "material": 7887,
+            "name": "4.CouchÃ© permanent/CMJN/pelliculage brillant smart",
+            "leadTime": 4
+        },
+        {
+            "id": "928",
+            "finish": "p53568",
+            "material": 7887,
+            "name": "3. CouchÃ© permanent/CMJN/pelliculage mat smart",
+            "leadTime": 4
+        },
+        {
+            "id": "864",
+            "finish": "0",
+            "material": 7887,
+            "name": "CouchÃ© permanent/CMJN/VB TAU",
+            "leadTime": 3
+        },
+        {
+            "id": "920",
+            "finish": "0",
+            "material": 56426,
+            "name": "19. Tintoretto/CMJN smartlabel",
+            "leadTime": 4
+        },
+        {
+            "id": "922",
+            "finish": "e18",
+            "material": 55095,
+            "name": "20. Jaderaster/CMJN/Vernis brillant smartlabel",
+            "leadTime": 4
+        },
+        {
+            "id": "908",
+            "finish": "e18",
+            "material": 77762,
+            "name": "11. PP argent/CMJNW/vernis brillant smartlabel",
+            "leadTime": 4
+        },
+        {
+            "id": "910",
+            "finish": "p7815",
+            "material": 77762,
+            "name": "12. PP argent/CMJNW/pelliculage brillant smart",
+            "leadTime": 4
+        },
+        {
+            "id": "912",
+            "finish": "p53568",
+            "material": 77762,
+            "name": "13. PP argent/CMJNW/pelliculage mat smart",
+            "leadTime": 4
+        },
+        {
+            "id": "896",
+            "finish": "e18",
+            "material": 54063,
+            "name": "5.PP blanc/CMJN/vernis brillant Smartlabel",
+            "leadTime": 4
+        },
+        {
+            "id": "898",
+            "finish": "p7815",
+            "material": 54063,
+            "name": "6.PP blanc/CMJN/pelliculage brillant smartlabel",
+            "leadTime": 4
+        },
+        {
+            "id": "900",
+            "finish": "p53568",
+            "material": 54063,
+            "name": "7.PP blanc/CMJN/pelliculage mat smartlabel",
+            "leadTime": 4
+        },
+        {
+            "id": "902",
+            "finish": "e18",
+            "material": 55316,
+            "name": "8. PP transparent/CMJNW/Vernis brillant smartlabel",
+            "leadTime": 4
+        },
+        {
+            "id": "904",
+            "finish": "p7815",
+            "material": 55316,
+            "name": "9. PP transparent/CMJNW/Pelliculage brillant smart",
+            "leadTime": 4
+        },
+        {
+            "id": "906",
+            "finish": "p53568",
+            "material": 55316,
+            "name": "10. PP transparent/CMJNW/Pelliculage mat smart",
+            "leadTime": 4
+        }
+    ],
+    "materials": [
+        {
+            "id": 7775,
+            "name": "COUCHE ENLEVABLE",
+            "finishes": [
+                "e18"
+            ]
+        },
+        {
+            "id": 7887,
+            "name": "80g Coated permanent - 4 colour",
+            "finishes": [
+                "e18",
+                "p7815",
+                "p53568",
+                "0"
+            ]
+        },
+        {
+            "id": 56426,
+            "name": "PAPIER DE CREATION NATUREL",
+            "finishes": [
+                "0"
+            ]
+        },
+        {
+            "id": 55095,
+            "name": "90g Embossed pearlescent paper - 4 colour",
+            "finishes": [
+                "e18"
+            ]
+        },
+        {
+            "id": 77762,
+            "name": "PP ARGENT BRILLANT",
+            "finishes": [
+                "e18",
+                "p7815",
+                "p53568"
+            ]
+        },
+        {
+            "id": 54063,
+            "name": "PP BLANC BRILLANT",
+            "finishes": [
+                "e18",
+                "p7815",
+                "p53568"
+            ]
+        },
+        {
+            "id": 55316,
+            "name": "PP TRANSPARENT",
+            "finishes": [
+                "e18",
+                "p7815",
+                "p53568"
+            ]
+        }
+    ],
+    "finishes": [
+        {
+            "id": "e18",
+            "name": "VERNIS BRILLANT"
+        },
+        {
+            "id": "p7815",
+            "name": "PELLICULAGE BRILLANT"
+        },
+        {
+            "id": "p53568",
+            "name": "Mat laminated"
+        },
+        {
+            "id": "0",
+            "name": "No finish"
+        }
+    ],
+    "cores": [
+        {
+            "size": 40,
+            "name": "4cm"
+        },
+        {
+            "size": 76,
+            "name": "7.6cm"
+        }
+    ]
+}

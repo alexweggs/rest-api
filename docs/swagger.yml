@@ -1,0 +1,115 @@
+swagger: '2.0'
+basePath: /v1
+info:
+  version: 1.0.0
+  title: Adesa Smartlabel
+  description: Order Labels on a roll
+  termsOfService: terms
+  contact:
+    name: Laurent
+    email: marketing@adesa.fr
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+
+paths:
+  /parameters:
+    get:
+      summary: Return all options and parameters
+      description: Return all options and parameters
+      responses:
+        200:
+          description: OK
+          schema:
+            title: Parameters
+            type: object
+            properties:
+              materials:
+                type: array
+                items:
+                  description: Materials
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 77762
+                    name:
+                      type: string
+                      example: '90g Embossed pearlescent paper - 4 colour'
+                    finishes:
+                      example: [e18, p7815]
+                      type: array
+                      items:
+                        type: string
+
+
+              finishes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: e18
+                    name:
+                      type: string
+                      example: 'Mat laminated'
+
+              orientations:
+                type: array
+                items:
+                  type: integer
+                  example: [0,90,180,270]
+
+              cores:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    size:
+                      type: number
+                    name:
+                      type: string
+
+              cuttings:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    label:
+                      type: string
+                      example: 'Cut to shape'
+                    value:
+                      type: string
+                      example: 'FORME'
+
+              scenarios:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    leadTime:
+                      type: integer
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    material:
+                      type: integer
+                    finish:
+                      type: string
+
+  /quote:
+    post:
+      summary: Create a new quote
+      description: Create a new quote
+      responses:
+        200:
+          description: OK
+  /order:
+    post:
+      summary: Turn a quote into an order
+      description: Turn a quote into an order
+      responses:
+        200:
+          description: OK

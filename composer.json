@@ -1,0 +1,21 @@
+{
+  "name": "smartlabel/rest-api",
+  "description": "SmartLabel RESTful API - Order labels on a roll with a simple POST request",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Romain Bessuges-Meusy",
+      "email": "romain@agilitation.fr"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "adesa/smartlabel-client": "*",
+    "monolog/monolog": "^1.17",
+    "silex/silex": "*"
+  },
+  "require-dev": {
+    "zircote/swagger-php" : "*"
+  }
+}
