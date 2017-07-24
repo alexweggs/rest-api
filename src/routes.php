@@ -40,7 +40,7 @@ $app->post('/v1/quote', function (Application $app, Request $request) use ($smar
     );
 
     return $app->json([
-        'core_diameter' => $dossier->diametre,
+        'diameter' => $dossier->diametre,
         'price' => $dossier->prix,
         'quote_id' => $dossier->numero,
         'weight' => $dossier->poids

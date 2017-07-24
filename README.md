@@ -11,7 +11,7 @@
 
 **This API is intended to be called and MUST be proxied by your webserver. It will not work directly through AJAX.**
 
-## `GET /parameters`
+## Fetch form params `GET` `/parameters`
 
 The `/parameters` route returns in a single HTTP request you can safely cache, a JSON object containing every values required to build a complete front-end form.
 
@@ -35,7 +35,7 @@ The following fields apply only when automatic application is selected
 We can print multiple versions of the same specs, but you're limited to 10 different visuals per order. You can create a single version form, with a text input and a file input, then allow your customer to duplicate this form, with a \"add an additional version\" button. You may also choose to provide ten slots with drag'n drop capabilities.
 
 
-## `POST /quote`
+## Create a new quote `POST` `/quote`
 
 Create a new quote
 
@@ -53,3 +53,60 @@ Create a new quote
 | nb_reels | integer | total number of reels
 | orientation | integer | orientation of the visual on the reel : 0, 90, 180 or 270
 | nb_labels_per_versions | array[number] | number of label for each version
+
+### Return value
+
+| Property | Type | Description |
+| ---            | ---  | ---         |
+| quote_id       |  int | The identifier of the price request, intended to be used on a late `/order` call
+| diameter       |  number | The diameter of a reel, in centimeters. Depends on the material and finish thickness, the number of labels and size of the core.
+| price      | integer | your purchase price
+| weight        | number | estimated weight of the order, in Kg
+
+
+## Turn a quote into an order `POST` `/order`
+
+With the given quote ID,  creates a valid order, immediately sent to production. It is **REQUIRED** that you fully processed or acknowledge your customer's payment before calling this method.
+
+---
+
+To facilitate the tracking of your internal order IDs, you can pass your order ID into the external ID field. Its value will be used on the shipping label and in the monthly invoice.
+
+| Parameter name            | Type      | Description |
+| ---                       | ---       | ---         |
+| quote_id                  |  integer  | The quote ID retreived from the previous /quote POST request. You are allowed to reuse a previous quote ID in case of a re-order or a boormarked calculation. <br>  <br> *For a better user experience, you may use the browser's History API or query string hash to fetch the parameters of the quote.*
+| external_id               | string    | An identifier of the order in your own application. This ID will be printed on the shipping label to help you trace your order number back. <br> <br> *This external ID will also be mentioned on your monthly invoice.*
+| nb_labels_per_versions    | array     | Indexed array of quantities per labels
+| versions_titles           | array     | Indexed array of the versions titles
+| versions_files            | array     | Indexed array of graphic files (PDF)
+
+### Return Value
+
+| Property       | Type | Description |
+| ---            | ---  | ---         |
+| quote_id       |  int | The identifier of the price request, intended to be used on a late `/order` call
+
+## Track your orders `GET` `/status`
+
+Pass a list of quotes IDs and retreive their current production or shipping status.
+
+The `code` property may be one of
+
+| Code  | Meaning                 |
+| ---   | -----                   |
+| **1** | Waiting                 |
+| **2** | In production           |
+| **3** | Shipping                |
+| **4** | Problem with the files  |
+
+### Return Value
+
+| Property  | Type | Description |
+| ---       | ---  | ---         |
+| quote_id  |  int | The identifier of the price request
+| code      |  int | Status constant
+| infos     | string | Message from the carrier
+| tracking_url | string | Tracking URL for the package on the carrier website
+
+
+
