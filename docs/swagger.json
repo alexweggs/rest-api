@@ -1,0 +1,404 @@
+{
+  "swagger": "2.0",
+  "host": "api.smartlabel.fr",
+  "basePath": "/v1",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "info": {
+    "version": "v1",
+    "title": "Adesa Smartlabel",
+    "description": "**SmartLabel** RESTful API is the simplest and most efficient way to order and resell labels on a roll.\n\n  1. Create a form with the the parameters and behaviour described in the `GET /parameters` route (could be web or app)\n  2. Send the request to your webserver, preferably using AJAX\n  3. Call the `POST /quote` route to create a new quote and retreive production details *(purchase price, lead time, reel diameter, weight)*. The request can safely be stored in your own caching system.\n  4. Apply your margin and return the values to your form\n  5. When your customer did place his order, send a `POST` request to the `/order` route with the quote identifier and your own order ID.\n  6. Track production and shipping of all your pending orders by sending a `GET` request to the `/status` route\n\nThis API is intended to be called and MUST be proxied by your webserver. It will not work directly through AJAX. \n",
+    "termsOfService": "terms",
+    "contact": {
+      "name": "Laurent",
+      "email": "marketing@adesa.fr"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  },
+  "paths": {
+    "/parameters": {
+      "get": {
+        "summary": "Return all options and parameters",
+        "description": "The `/parameters` route returns in a single HTTP request you can safely cache, a JSON object containing every values required to build a complete front-end form.\n\n---\n\nThe form is generally composed of the following fields\n\n  * a checkbox / radio to choose between **automatic and manual application**\n  * a dropdown to select the **material**\n  * a dropdown to select the **finish** (based on the  selected material)\n  * two numeric input fields, for **width** and **height** *(in centimeters)*\n  * a dropdown / radio to choose between **cut to shape** and **straight cut** *(in case of cut to shape, you must ask your customer for a 100% black vector path)*\n\nThe following fields apply only when automatic application is selected\n\n  * a dropdown / radio to choose between **core sizes**\n  * a numeric input, for the **number of labels per reel** *(used to calculate the estimated reel diameter)*\n  * dropdown, or button, to switch the **orientation** of the graphic file on the label\n  *(in degrees, one of 0, 90, 180 and 270)*\n\nWe can print multiple versions of the same specs, but you're limited to 10 different visuals per order. You can create a single version form, with a text input and a file input, then allow your customer to duplicate this form, with a \\\"add an additional version\\\" button. You may also choose to provide ten slots with drag'n drop capabilities.\n",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "title": "Parameters",
+              "type": "object",
+              "properties": {
+                "materials": {
+                  "type": "array",
+                  "items": {
+                    "description": "Materials",
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 77762
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "90g Embossed pearlescent paper - 4 colour"
+                      },
+                      "finishes": {
+                        "example": [
+                          "e18",
+                          "p7815"
+                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "finishes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "e18"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Mat laminated"
+                      }
+                    }
+                  }
+                },
+                "orientations": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "example": [
+                      0,
+                      90,
+                      180,
+                      270
+                    ]
+                  }
+                },
+                "cores": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "size": {
+                        "type": "number"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "cuttings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "example": "Cut to shape"
+                      },
+                      "value": {
+                        "type": "string",
+                        "example": "FORME"
+                      }
+                    }
+                  }
+                },
+                "scenarios": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "leadTime": {
+                        "type": "integer"
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "material": {
+                        "type": "integer"
+                      },
+                      "finish": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quote": {
+      "post": {
+        "summary": "Create a new quote",
+        "description": "Create a new quote",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "scenario",
+            "in": "formData",
+            "description": "the scenario id for the selected material and finish",
+            "type": "integer",
+            "default": 914
+          },
+          {
+            "name": "quantity",
+            "in": "formData",
+            "description": "the total number of individual labels",
+            "type": "integer",
+            "default": 500
+          },
+          {
+            "name": "height",
+            "in": "formData",
+            "description": "height of a label, in cm",
+            "type": "number",
+            "default": 12
+          },
+          {
+            "name": "width",
+            "in": "formData",
+            "description": "width of a label, in cm",
+            "type": "number",
+            "default": 8.5
+          },
+          {
+            "name": "application",
+            "in": "formData",
+            "description": "type of application, if \"automatic\", the reels are intended to be applied with a machine.",
+            "type": "string",
+            "enum": [
+              "automatic",
+              "manual"
+            ],
+            "default": "automatic"
+          },
+          {
+            "name": "core_size",
+            "in": "formData",
+            "description": "the size of the core, in millimeters",
+            "type": "number",
+            "enum": [
+              40,
+              76
+            ],
+            "default": 76
+          },
+          {
+            "name": "nb_labels_per_reel",
+            "description": "the number of label on one reel",
+            "type": "number",
+            "in": "formData",
+            "default": 100
+          },
+          {
+            "name": "nb_reels",
+            "description": "total number of reels",
+            "type": "number",
+            "in": "formData",
+            "default": 5
+          },
+          {
+            "name": "orientation",
+            "description": "orientation of the visual on the reel",
+            "type": "number",
+            "in": "formData",
+            "enum": [
+              0,
+              90,
+              180,
+              270
+            ],
+            "default": 90
+          },
+          {
+            "name": "nb_labels_per_versions",
+            "description": "list of versions",
+            "type": "array",
+            "in": "formData",
+            "items": {
+              "type": "number"
+            },
+            "default": [
+              100,
+              100,
+              100,
+              200
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "diameter": {
+                  "description": "The diameter of a reel, in centimeters. Depends on the material and finish thickness, the number of labels and size of the core.",
+                  "type": "number",
+                  "example": 4.3
+                },
+                "price": {
+                  "description": "Your purchase price",
+                  "type": "number",
+                  "example": 142.5
+                },
+                "quote_id": {
+                  "description": "The identifier of the price request, intended to be used on a late `/order` call",
+                  "type": "integer",
+                  "example": 1523
+                },
+                "weight": {
+                  "description": "Total weight in kilograms of the order",
+                  "type": "number",
+                  "example": 3.5
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order": {
+      "post": {
+        "summary": "Turn a quote into an order",
+        "description": "With the given quote ID,  creates a valid order, immediately sent to production. It is **REQUIRED** that you fully processed or acknowledge your customer's payment before calling this method.\n\n--- \n\nTo facilitate the tracking of your internal order IDs, you can pass your order ID into the external ID field. Its value will be used on the shipping label and in the monthly invoice.\n",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "quote_id",
+            "description": "The quote ID retreived from the previous /quote POST request. You are allowed to reuse a previous quote ID in case of a re-order or a boormarked calculation. \n\n*For a better user experience, you may use the browser's History API or query string hash to fetch the parameters of the quote.*\n",
+            "type": "number",
+            "in": "formData"
+          },
+          {
+            "name": "external_id",
+            "type": "string",
+            "in": "formData",
+            "description": "An identifier of the order in your own application. This ID will be printed on the shipping label to help you trace your order number back.\nThis external ID will also be mentioned on your monthly invoice.\n"
+          },
+          {
+            "name": "versions_titles",
+            "type": "array",
+            "description": "Indexed array of the versions titles",
+            "in": "formData",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "Version #1",
+              "Version #2",
+              "Version #3"
+            ]
+          },
+          {
+            "name": "nb_labels_per_versions",
+            "type": "array",
+            "description": "Indexed array of quantities per labels",
+            "in": "formData",
+            "items": {
+              "type": "number"
+            },
+            "default": [
+              100,
+              100,
+              200
+            ]
+          },
+          {
+            "name": "versions_files",
+            "type": "array",
+            "in": "formData",
+            "description": "Indexed array of files",
+            "items": {
+              "type": "file"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "order_reference": {
+                  "description": "Adesa SmartLabel order reference.",
+                  "type": "number"
+                },
+                "quote_id": {
+                  "description": "The quote ID for you to store and reuse if needed.",
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "Retreive order(s) status",
+        "description": "Pass a list of quotes IDs and retreive their current production or shipping status.\n\nThe `code` property may be one of\n  | Code  | Meaning                 |\n  | ---   | -----                   |\n  | **1** | Waiting                 |\n  | **2** | In production           |\n  | **3** | Shipping                |\n  | **4** | Problem with the files  |\n  \n",
+        "parameters": [
+          {
+            "name": "quote_ids",
+            "in": "query",
+            "type": "string",
+            "description": "The quote IDs separated by a semi-colon",
+            "default": "3204;3225;3266;3267;3280"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "infos": {
+                    "type": "string",
+                    "description": "Message from the carrier"
+                  },
+                  "tracking_url": {
+                    "type": "string",
+                    "description": "Tracking URL from the carrier"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
