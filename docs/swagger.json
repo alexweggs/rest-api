@@ -266,7 +266,7 @@
                   "type": "number",
                   "example": 142.5
                 },
-                "quote_id": {
+                "job_id": {
                   "description": "The identifier of the price request, intended to be used on a late `/order` call",
                   "type": "integer",
                   "example": 1523
@@ -291,7 +291,7 @@
         ],
         "parameters": [
           {
-            "name": "quote_id",
+            "name": "job_id",
             "description": "The quote ID retreived from the previous /quote POST request. You are allowed to reuse a previous quote ID in case of a re-order or a boormarked calculation. \n\n*For a better user experience, you may use the browser's History API or query string hash to fetch the parameters of the quote.*\n",
             "type": "number",
             "in": "formData"
@@ -351,7 +351,7 @@
                   "description": "Adesa SmartLabel order reference.",
                   "type": "number"
                 },
-                "quote_id": {
+                "job_id": {
                   "description": "The quote ID for you to store and reuse if needed.",
                   "type": "number"
                 }
@@ -367,7 +367,7 @@
         "description": "Pass a list of quotes IDs and retreive their current production or shipping status.\n\nThe `code` property may be one of\n  | Code  | Meaning                 |\n  | ---   | -----                   |\n  | **1** | Waiting                 |\n  | **2** | In production           |\n  | **3** | Shipping                |\n  | **4** | Problem with the files  |\n  \n",
         "parameters": [
           {
-            "name": "quote_ids",
+            "name": "job_ids",
             "in": "query",
             "type": "string",
             "description": "The quote IDs separated by a semi-colon",

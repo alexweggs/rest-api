@@ -58,7 +58,7 @@ Create a new quote
 
 | Property | Type | Description |
 | ---            | ---  | ---         |
-| quote_id       |  int | The identifier of the price request, intended to be used on a late `/order` call
+| job_id       |  int | The identifier of the price request, intended to be used on a late `/order` call
 | diameter       |  number | The diameter of a reel, in centimeters. Depends on the material and finish thickness, the number of labels and size of the core.
 | price      | integer | your purchase price
 | weight        | number | estimated weight of the order, in Kg
@@ -74,17 +74,22 @@ To facilitate the tracking of your internal order IDs, you can pass your order I
 
 | Parameter name            | Type      | Description |
 | ---                       | ---       | ---         |
-| quote_id                  |  integer  | The quote ID retreived from the previous /quote POST request. You are allowed to reuse a previous quote ID in case of a re-order or a boormarked calculation. <br>  <br> *For a better user experience, you may use the browser's History API or query string hash to fetch the parameters of the quote.*
+| job_id                  |  integer  | The quote ID retreived from the previous /quote POST request. You are allowed to reuse a previous quote ID in case of a re-order or a boormarked calculation. <br>  <br> *For a better user experience, you may use the browser's History API or query string hash to fetch the parameters of the quote.*
 | external_id               | string    | An identifier of the order in your own application. This ID will be printed on the shipping label to help you trace your order number back. <br> <br> *This external ID will also be mentioned on your monthly invoice.*
 | nb_labels_per_versions    | array     | Indexed array of quantities per labels
 | versions_titles           | array     | Indexed array of the versions titles
 | versions_files            | array     | Indexed array of graphic files (PDF)
+| address_full_name | string | Company or person name
+| address_street_address | string | Street address with new line (\n) separators
+| address_city | string | City name
+| address_country | string | Country code (https://www.iso.org/obp/ui/#search)
+
 
 ### Return Value
 
 | Property       | Type | Description |
 | ---            | ---  | ---         |
-| quote_id       |  int | The identifier of the price request, intended to be used on a late `/order` call
+| job_id       |  int | The identifier of the price request, intended to be used on a late `/order` call
 
 ## Track your orders `GET` `/status`
 
@@ -103,7 +108,7 @@ The `code` property may be one of
 
 | Property  | Type | Description |
 | ---       | ---  | ---         |
-| quote_id  |  int | The identifier of the price request
+| job_id  |  int | The identifier of the price request
 | code      |  int | Status constant
 | infos     | string | Message from the carrier
 | tracking_url | string | Tracking URL for the package on the carrier website

@@ -42,7 +42,7 @@ $app->post('/v1/quote', function (Application $app, Request $request) use ($smar
     return $app->json([
         'diameter' => $dossier->diametre,
         'price' => $dossier->prix,
-        'quote_id' => $dossier->numero,
+        'job_id' => $dossier->numero,
         'weight' => $dossier->poids
     ]);
 });
@@ -54,7 +54,7 @@ $app->post('/v1/order', function (Application $app, Request $request) use ($smar
 
     $params = $request->request;
     $dossier = new \Adesa\SmartLabelClient\Dossier();
-    $dossier->numero = $params->get('quote_id');
+    $dossier->numero = $params->get('job_id');
     $dossier->scenario = new \Adesa\SmartLabelClient\Scenario($params->get('scenario_id'));
     $dossier->quantitesParSerie = implode(';', $params->get('nb_labels_per_versions'));
 
@@ -62,6 +62,15 @@ $app->post('/v1/order', function (Application $app, Request $request) use ($smar
 
     $versionsTitles = $params->get('versions_titles');
 
+
+    $smartLabel->creerAdresseLivraison(
+        $dossier,
+        $params->get('address_full_name'),
+        $params->get('address_street_address'),
+        $params->get('address_postal_code'),
+        $params->get('address_city'),
+        $params->get('address_country')
+    );
     /**
      * @var $version Symfony\Component\HttpFoundation\File\UploadedFile
      */
@@ -74,26 +83,24 @@ $app->post('/v1/order', function (Application $app, Request $request) use ($smar
 
     $smartLabel->finaliserBonDeCommande($bdc);
 
-    foreach($filesToDelete as $file){
+    foreach ($filesToDelete as $file) {
         unlink($file);
     }
 
     return $app->json([
         "order_reference" => $bdc->reference,
-        "quote_id" => $bdc->dossier->numero
+        "job_id" => $bdc->dossier->numero
     ]);
-
-
 });
 
-$app->get('/v1/status', function(Application $app, Request $request) use ($smartLabel) {
-   $params = $request->request;
-    $ids = $params->get("quote_ids");
+$app->get('/v1/status', function (Application $app, Request $request) use ($smartLabel) {
+    $params = $request->request;
+    $ids = $params->get("job_ids");
     $status = $smartLabel->etatDossiers(is_array($ids) ? $ids : explode(";", $ids));
 
-    return $app->json(array_map(function(\Adesa\SmartLabelClient\EtatDossier $item){
+    return $app->json(array_map(function (\Adesa\SmartLabelClient\EtatDossier $item) {
         return [
-            "quote_id" => $item->numero,
+            "job_id" => $item->numero,
             "code" => $item->code,
             "infos" => $item->informationsLivraison,
             "tracking_url" => $item->trackingURL
